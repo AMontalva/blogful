@@ -54,12 +54,12 @@ def entry(id):
     entry_data = session.query(Entry).get(id)
     return render_template("entry.html", entry_data=entry_data)
 
-@app.route("/edit_entry/<id>", methods=["GET"])
+@app.route("/edit/<id>/edit", methods=["GET"])
 def edit_entry(id):
     entry_data = session.query(Entry).get(id)
     return render_template("edit.html", entry_data=entry_data)
     
-@app.route("/edit_entry/<id>", methods=["POST"])
+@app.route("/edit/<id>/edit", methods=["POST"])
 def edit_entry_post(id):
     entry_data = session.query(Entry).get(id)
     entry_data.title = request.form["title"]
@@ -67,12 +67,12 @@ def edit_entry_post(id):
     session.commit()
     return redirect(url_for("entries"))
 
-@app.route("/delete_entry/<id>", methods=["GET"])
+@app.route("/delete/<id>/delete", methods=["GET"])
 def delete_entry(id):
     entry_data = session.query(Entry).get(id)
     return render_template("delete.html", entry_data=entry_data)
     
-@app.route("/delete_entry/<id>", methods=["POST"])
+@app.route("/delete/<id>/delete", methods=["POST"])
 def delete_entry_post(id):
     choice = request.form["delete_button"]
 
