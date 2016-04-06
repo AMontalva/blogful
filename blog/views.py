@@ -53,7 +53,7 @@ def add_entry_post():
 def entry(id):
     entry_data = session.query(Entry).get(id)
     return render_template("entry.html", entry_data=entry_data)
-    
+
 @app.route("/edit_entry/<id>", methods=["GET"])
 def edit_entry(id):
     entry_data = session.query(Entry).get(id)
@@ -66,4 +66,21 @@ def edit_entry_post(id):
     entry_data.content = request.form["content"]
     session.commit()
     return redirect(url_for("entries"))
+
+@app.route("/delete_entry/<id>", methods=["GET"])
+def delete_entry(id):
+    entry_data = session.query(Entry).get(id)
+    return render_template("delete.html", entry_data=entry_data)
     
+@app.route("/delete_entry/<id>", methods=["POST"])
+def delete_entry_post(id):
+    choice = request.form["delete_button"]
+
+    if(choice == "Yes"):
+        entry_data = session.query(Entry).get(id)
+        session.delete(entry_data)
+        session.commit()
+        return redirect(url_for("entries"))
+    else:
+        return redirect(url_for("entries"))
+        
