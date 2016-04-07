@@ -34,6 +34,17 @@
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
+                        <form role="form" method="POST" class="entries-per-page-form form-inline">
+                            <div class="form-group">
+                                <select name="limit">
+                                    <option value=5>5</option>
+                                    <option value=10>10</option>
+                                    <option value=15>15</option>
+                                    <option value=20>20</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-default">Entries per page</button>
+                        </form>
                     </ul>
                 </div>
             </div>

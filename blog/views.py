@@ -7,8 +7,8 @@ from flask import request, redirect, url_for
 
 
 
-@app.route("/")
-@app.route("/page/<int:page>")
+@app.route("/", methods=["GET"])
+@app.route("/page/<int:page>", methods=["GET"])
 def entries(page=1):
     PAGINATE_BY = 10
     count = session.query(Entry).count()
@@ -46,6 +46,12 @@ def entries(page=1):
         page=page,
         total_pages=total_pages
     )
+    
+@app.route("/", methods=["POST"])
+@app.route("/page/<int:page>", methods=["POST"])
+def entries_post(page=1):
+    limit=request.form["limit"]
+    return redirect(request.base_url + "?limit=" + limit)
 
 @app.route("/entry/add", methods=["GET"])
 def add_entry_get():
@@ -100,4 +106,4 @@ def delete_entry_post(id):
 @app.route("/test")
 def test():
     # i = request.args.get("var")
-    return request.url 
+    return request.url
