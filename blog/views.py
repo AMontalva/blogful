@@ -5,15 +5,28 @@ from .database import session, Entry
 
 from flask import request, redirect, url_for
 
-PAGINATE_BY = 10
+
 
 @app.route("/")
 @app.route("/page/<int:page>")
 def entries(page=1):
+    PAGINATE_BY = 10
+    count = session.query(Entry).count()
+
+    limit = request.args.get("limit")
+    try:
+        limit = int(limit)
+        if(limit <= 0):
+            raise ValueError
+        elif(limit > count):
+            raise IndexError
+        else:
+         PAGINATE_BY = limit
+    except (ValueError, TypeError, IndexError) as e:
+        PAGINATE_BY = 10
+
     # Zero-indexed page
     page_index = page - 1
-
-    count = session.query(Entry).count()
 
     start = page_index * PAGINATE_BY
     end = start + PAGINATE_BY
@@ -83,4 +96,8 @@ def delete_entry_post(id):
         return redirect(url_for("entries"))
     else:
         return redirect(url_for("entries"))
-        
+
+@app.route("/test")
+def test():
+    # i = request.args.get("var")
+    return request.url 
