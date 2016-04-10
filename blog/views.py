@@ -14,6 +14,8 @@ from flask.ext.login import login_required
 
 from flask.ext.login import current_user
 
+from flask.ext.login import logout_user
+
 @app.route("/", methods=["GET"])
 @app.route("/page/<int:page>", methods=["GET"])
 def entries(page=1):
@@ -83,12 +85,14 @@ def entry(id):
     entry_data = session.query(Entry).get(id)
     return render_template("entry.html", entry_data=entry_data)
 
-@app.route("/edit/<id>/edit", methods=["GET"])
+@app.route("/entry/<id>/edit", methods=["GET"])
+@login_required
 def edit_entry(id):
     entry_data = session.query(Entry).get(id)
     return render_template("edit.html", entry_data=entry_data)
     
-@app.route("/edit/<id>/edit", methods=["POST"])
+@app.route("/entry/<id>/edit", methods=["POST"])
+@login_required
 def edit_entry_post(id):
     entry_data = session.query(Entry).get(id)
     entry_data.title = request.form["title"]
@@ -96,12 +100,14 @@ def edit_entry_post(id):
     session.commit()
     return redirect(url_for("entries"))
 
-@app.route("/delete/<id>/delete", methods=["GET"])
+@app.route("/entry/<id>/delete", methods=["GET"])
+@login_required
 def delete_entry(id):
     entry_data = session.query(Entry).get(id)
     return render_template("delete.html", entry_data=entry_data)
     
-@app.route("/delete/<id>/delete", methods=["POST"])
+@app.route("/entry/<id>/delete", methods=["POST"])
+@login_required
 def delete_entry_post(id):
     choice = request.form["delete_button"]
 
@@ -133,3 +139,8 @@ def login_post():
 
     login_user(user)
     return redirect(request.args.get('next') or url_for("entries"))
+
+@app.route("/logout", methods=["GET"])
+def logout():
+    logout_user()
+    return redirect(url_for("entries"))
