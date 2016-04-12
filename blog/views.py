@@ -22,17 +22,14 @@ def entries(page=1):
     PAGINATE_BY = 10
     count = session.query(Entry).count()
 
-    limit = request.args.get("limit")
-    try:
-        limit = int(limit)
-        if(limit <= 0):
-            raise ValueError
-        elif(limit > count):
-            raise IndexError
-        else:
-         PAGINATE_BY = limit
-    except (ValueError, TypeError, IndexError) as e:
+    limit = request.args.get("limit", "10")
+    # try:
+    limit = int(limit)
+    
+    if(limit >= 1 << 63):
         PAGINATE_BY = 10
+    else:
+        PAGINATE_BY = limit
 
     # Zero-indexed page
     page_index = page - 1
